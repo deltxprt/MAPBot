@@ -39,5 +39,7 @@ jobs:
   
       steps:
         - name: rebuilding DO App
+          shell: pwsh
           run: | 
-            curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" -d '{"force_build": true}' https://api.digitalocean.com/v2/apps/${{ secrets.DIGITALOCEAN_APP_ID_DEV}}/deployments
+            $rebuild=Invoke-RestMethod -Uri https://api.digitalocean.com/v2/apps/$id/deployments -header $header -Method Post -ContentType 'application/json'
+            if($rebuild.deployement -eq 'PENDING_BUILD'){write-output 'rebuild completed'}else{throw $error[0]}
