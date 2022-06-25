@@ -41,6 +41,5 @@ jobs:
         - name: rebuilding DO App
           shell: pwsh
           run: | 
-            $header = @{"Content-Type" = "application/json";"Authorization" = "Bearer $DOCKERTOKEN"} | convertTo-Json
-            $rebuild=Invoke-RestMethod -Uri https://api.digitalocean.com/v2/apps/$DIGITALOCEAN_APP_ID_DEV/deployments -header $header -Method Post -ContentType 'application/json'
+            $rebuild=Invoke-RestMethod -Uri https://api.digitalocean.com/v2/apps/$DIGITALOCEAN_APP_ID_DEV/deployments -header $(@{"Content-Type" = "application/json";"Authorization" = "Bearer $DOCKERTOKEN"} | convertTo-Json) -Method Post -ContentType 'application/json'
             if($rebuild.deployement -eq 'PENDING_BUILD'){write-output 'rebuild completed'}else{throw $error[0]}
