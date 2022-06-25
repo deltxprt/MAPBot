@@ -47,7 +47,6 @@ jobs:
             $header = @{"Content-Type" = "application/json";"Authorization" = "Bearer $env:DIGITALOCEAN_ACCESS_TOKEN"}
             $ListApps = Invoke-RestMethod -Uri https://api.digitalocean.com/v2/apps -Method GET -Headers $header
             $DevAppID = $($ListApps.apps | Where-Object {$_.spec.name -eq "mapbot-dev"}).id
-            $body = @{"force_build" = $true}
             $rebuild=Invoke-RestMethod -Uri "https://api.digitalocean.com/v2/apps/$DevAppID/deployments" -header $header -method POST -ContentType 'application/json'
             if($rebuild.deployment){
               write-output 'rebuild started'
@@ -55,6 +54,8 @@ jobs:
               do{
                 $status = Invoke-RestMethod -Uri https://api.digitalocean.com/v2/apps/$DevAppID/deployments/$deploymentID -Method GET -Headers $header
                 $status = $status.deployment.phase
+                write-output "Still rebuilding... $status"
               }until($status -eq 'ACTIVE')
+              write-output 'rebuild finished'
             }
             else{throw 'something went wrong'}
