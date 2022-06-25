@@ -38,8 +38,6 @@ jobs:
       runs-on: ubuntu-latest
   
       steps:
-        - uses: jjst/action-digitalocean-deploy-app@v2
-          with:
-            token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-            app-id: ${{ secrets.DIGITALOCEAN_APP_ID_DEV }}
-            spec: ''
+        - name: rebuilding DO App
+          run: | 
+            curl -X POST -H "Content-Type: application/json" -d '{"rebuild": true}' https://api.digitalocean.com/v2/apps/${{ secrets.DIGITALOCEAN_APP_ID_DEV}}/deployments
