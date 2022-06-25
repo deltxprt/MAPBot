@@ -49,4 +49,4 @@ jobs:
             $DevAppID = $($ListApps.apps | Where-Object {$_.spec.name -eq "mapbot-dev"}).id
             $body = @{"force_build" = $true}
             $rebuild=Invoke-RestMethod -Uri "https://api.digitalocean.com/v2/apps/$DevAppID/deployments" -header $header -method POST -ContentType 'application/json'
-            if($rebuild.deployement){write-output 'rebuild completed'; write-output $rebuild}else{throw 'something went wrong'}
+            if($rebuild.deployment){write-output 'rebuild completed'; write-output $rebuild}else{throw 'something went wrong'}
