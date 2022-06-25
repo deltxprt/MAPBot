@@ -19,7 +19,7 @@ jobs:
         id: generator
         with:
           separator: ''
-          length: '4'
+          length: '1'
           style: 'lowerCase'
       -
         name: test generator output
