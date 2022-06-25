@@ -14,6 +14,18 @@ jobs:
 
     steps:
       -
+        name: Unique Name Generator Action
+        uses: TGPSKI/name-generator-node-action@v2
+        id: generator
+        with:
+          separator: ''
+          length: '6'
+          style: 'lowerCase'
+
+      -
+        name: test generator output
+        run: echo "latest,${{ steps.generator.outputs.name }}"
+      -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       -
