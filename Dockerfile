@@ -2,7 +2,7 @@ FROM python:latest
 
 ADD bot /
 
-RUN python -version
+RUN python -V
 
 RUN python -m pip install --upgrade pip
 
