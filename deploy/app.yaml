@@ -1,0 +1,23 @@
+name: mapbot-dev
+region: tor
+workers:
+- envs:
+  - key: TOKEN
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:wQy/+p3Vs/i+YSerXzNFQHBIHZ2PlQUa:dRCNjam5/xlRRMwZWbkoUWOOZPrT1phbdT67HJyp3D6uf4PwGUqxPlq+/T5WW364OqP+7M907ML3tdbS7kzdQX3cqwNBiUsyI3/iulck63J8I27DCHk=]
+  - key: AccountPass
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:761CkJKETST/aW9kIvkPIoSka7QXH2uE:ms+FQm9Wr5o3sztRfGCw0AnnwKNnHK9id3sJLdXehHix60zV8ZWo7Lk=]
+  - key: Prefix
+    scope: RUN_AND_BUILD_TIME
+    value: .
+  image:
+    registry: vincdelta
+    registry_type: DOCKER_HUB
+    repository: discordbot
+    tag: dev
+  instance_count: 1
+  instance_size_slug: basic-xs
+  name: vincdelta-discordbot
