@@ -19,9 +19,8 @@ jobs:
         id: generator
         with:
           separator: ''
-          length: '6'
+          length: '4'
           style: 'lowerCase'
-
       -
         name: test generator output
         run: echo "latest,${{ steps.generator.outputs.name }}"
