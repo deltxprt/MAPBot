@@ -53,10 +53,10 @@ jobs:
               $deploymentID=$rebuild.deployment.id
               do{
                 $StatusOutput = "Still rebuilding $status..."
-                if($StatusOutputFormat){$StatusOutputFormat = "$StatusOutputFormat{0}" -f '.'}else{$StatusOutputFormat = "$StatusOutput{0}" -f '.'}
+                if($null -ne $StatusOutputFormat){$StatusOutputFormat = "$StatusOutputFormat{0}" -f '.'}else{$StatusOutputFormat = "$StatusOutput{0}" -f '.'}
                 $status = Invoke-RestMethod -Uri https://api.digitalocean.com/v2/apps/$DevAppID/deployments/$deploymentID -Method GET -Headers $header
                 $status = $status.deployment.phase
-                write-output $StatusOutput
+                write-output $StatusOutputFormat
               }until($status -eq 'ACTIVE')
               write-output 'rebuild finished'
             }
