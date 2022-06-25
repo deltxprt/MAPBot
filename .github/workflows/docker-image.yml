@@ -35,14 +35,16 @@ jobs:
   test:
       
       needs: build
-      runs-on: windows-latest
+      runs-on: ubuntu-latest
   
       steps:
         - name: rebuilding DO App
+          shell: pwsh
           env:
             DIGITALOCEAN_APP_ID_DEV: ${{ secrets.DIGITALOCEAN_APP_ID_DEV }}
-            DOCKERTOKEN: ${{ secrets.DOCKERTOKEN }}
-          shell: pwsh
+            DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
           run: | 
-            $header = @{"Content-Type" = "application/json";"Authorization" = "Bearer $env:DOCKERTOKEN"}
-            $rebuild=Invoke-RestMethod -Uri "https://api.digitalocean.com/v2/apps" -header $header -ContentType 'application/json'
+            $header = @{"Content-Type" = "application/json";"Authorization" = "Bearer $env:DIGITALOCEAN_ACCESS_TOKEN"}
+            $body = @{"force_build" = $true}
+            $rebuild=Invoke-RestMethod -Uri "https://api.digitalocean.com/v2/apps/8b4f1a78-f1e6-437e-b979-efb763a7cd8e/deployments" -header $header -body $body -method POST -ContentType 'application/json'
+            if($rebuild.deployement -eq 'PENDING_BUILD'){write-output 'rebuild completed'; write-output $rebuild}else{throw $error[0]}
