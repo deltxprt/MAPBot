@@ -48,5 +48,5 @@ jobs:
             $ListApps = Invoke-RestMethod -Uri https://api.digitalocean.com/v2/apps -Method GET -Headers $header
             $DevAppID = $($ListApps.apps | Where-Object {$_.spec.name -eq "mapbot-dev"}).id
             $body = @{"force_build" = $true}
-            $rebuild=Invoke-RestMethod -Uri "https://api.digitalocean.com/v2/apps/$DevAppID/deployments" -header $header -body $body -method POST -ContentType 'application/json'
+            $rebuild=Invoke-RestMethod -Uri "https://api.digitalocean.com/v2/apps/$DevAppID/deployments" -header $header -method POST -ContentType 'application/json'
             if($rebuild.deployement -eq 'PENDING_BUILD'){write-output 'rebuild completed'; write-output $rebuild}else{throw $error[0]}
