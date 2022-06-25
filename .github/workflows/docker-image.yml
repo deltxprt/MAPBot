@@ -42,3 +42,4 @@ jobs:
           with:
             token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
             app-id: ${{ secrets.DIGITALOCEAN_APP_ID_DEV }}
+            spec: ''
