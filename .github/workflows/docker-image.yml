@@ -44,5 +44,6 @@ jobs:
             DOCKERTOKEN: ${{ secrets.DOCKERTOKEN }}
           shell: pwsh
           run: | 
-            $rebuild=Invoke-RestMethod -Uri https://api.digitalocean.com/v2/apps/$env:DIGITALOCEAN_APP_ID_DEV/deployments -header "{"Content-Type": "application/json","Authorization": "Bearer $env:DOCKERTOKEN"}" -Method Post -ContentType 'application/json'
+            $header = @{"Content-Type" = "application/json";"Authorization" = "Bearer $env:DOCKERTOKEN"}
+            $rebuild=Invoke-RestMethod -Uri https://api.digitalocean.com/v2/apps/$env:DIGITALOCEAN_APP_ID_DEV/deployments -header $header -Method Post -ContentType 'application/json'
             if($rebuild.deployement -eq 'PENDING_BUILD'){write-output 'rebuild completed'}else{throw $error[0]}
