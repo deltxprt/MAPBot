@@ -39,12 +39,11 @@ jobs:
         - name: rebuilding DO App
           shell: pwsh
           env:
-            DIGITALOCEAN_APP_ID_DEV: ${{ secrets.DIGITALOCEAN_APP_ID_DEV }}
             DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
           run: | 
             $header = @{"Content-Type" = "application/json";"Authorization" = "Bearer $env:DIGITALOCEAN_ACCESS_TOKEN"}
             $ListApps = Invoke-RestMethod -Uri https://api.digitalocean.com/v2/apps -Method GET -Headers $header
-            $DevAppID = $($ListApps.apps | Where-Object {$_.spec.name -eq "mapbot-dev"}).id
+            $DevAppID = $($ListApps.apps | Where-Object {$_.spec.name -eq "mapbot-prod"}).id
             $rebuild=Invoke-RestMethod -Uri "https://api.digitalocean.com/v2/apps/$DevAppID/deployments" -header $header -method POST -ContentType 'application/json'
             if($rebuild.deployment){
               write-output 'rebuild started'
