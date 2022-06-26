@@ -6,13 +6,11 @@ on:
   pull_request:
     branches: [ "main" ]
 
-runs-on: self-hosted
-
 jobs:
 
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       -
@@ -37,7 +35,7 @@ jobs:
   test:
       
       needs: build
-      runs-on: ubuntu-latest
+      runs-on: self-hosted
   
       steps:
         - name: rebuilding DO App
