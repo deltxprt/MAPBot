@@ -2,7 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
+    paths: 
+      - Dockerfile 
+      - bot\**
   pull_request:
     branches: [ "main" ]
 
@@ -10,7 +12,7 @@ jobs:
 
   build:
 
-    runs-on: self-hosted
+    runs-on: ubuntu
 
     steps:
       -
@@ -35,7 +37,7 @@ jobs:
   test:
       
       needs: build
-      runs-on: self-hosted
+      runs-on: ubuntu
   
       steps:
         - name: rebuilding DO App
