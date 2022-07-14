@@ -5,6 +5,7 @@ on:
     paths: 
       - Dockerfile 
       - bot\**
+      - workflow\docker-image.yml
   pull_request:
     branches: [ "main" ]
 
