@@ -32,7 +32,7 @@ client = commands.Bot(command_prefix=Prefix, description=description, intents=in
 async def on_ready(): 
     Instances = GetInstancesStatus("amp.markaplay.net", "MapBot", AccountPass)
     while Instances:
-        for Instance in Instances :
+        for Instance in Instances:
             await client.change_presence(status=discord.Status.online, activity=discord.Game(f"{Instance['Game']} | {Instance['FriendlyName']} | Active Users: {Instance['Active Users']}\{Instance['Max Users']}"))
             await asyncio.sleep(10)
 

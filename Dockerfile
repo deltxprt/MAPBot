@@ -1,11 +1,28 @@
-FROM python:3.10-slim
+FROM python:3.10-alpine3.14 as builder
 
-ADD bot /
+WORKDIR /mapbot
 
-RUN python -V
+COPY bot /mapbot/bot
 
-RUN python -m pip install --upgrade pip
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-RUN pip install discord requests
+RUN apk upgrade \
+    python -V
+
+COPY requirements.txt .
+
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /mapbot/wheels -r requirements.txt
+
+
+FROM python:3.10-alpine3.14
+
+WORKDIR /mapbot
+
+COPY --from=builder /mapbot/bot .
+COPY --from=builder /mapbot/wheels /wheels
+COPY --from=builder /mapbot/requirements.txt .
+
+RUN pip install --no-cache /wheels/*
 
 CMD [ "python", "./MAPBot.py" ]
