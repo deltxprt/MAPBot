@@ -21,8 +21,10 @@ description = '''
 intents = discord.Intents.default()
 
 token = os.environ['TOKEN']
-AccountPass = os.environ['AccountPass']
+AMPUsername = os.environ['username']
+AMPPass = os.environ['AccountPass']
 Prefix = os.environ['Prefix']
+AMPUrl = os.environ['url']
 
 OWNERS = [232011534367326230]
 BLACKLIST = []
@@ -30,7 +32,7 @@ client = commands.Bot(command_prefix=Prefix, description=description, intents=in
 
 @client.event # Change the status of the bot
 async def on_ready(): 
-    Instances = GetInstancesStatus("amp.markaplay.net", "MapBot", AccountPass)
+    Instances = GetInstancesStatus(AMPUrl, AMPUsername, AMPPass)
     while Instances:
         for Instance in Instances:
             await client.change_presence(status=discord.Status.online, activity=discord.Game(f"{Instance['Game']} | {Instance['FriendlyName']} | Active Users: {Instance['Active Users']}\{Instance['Max Users']}"))
