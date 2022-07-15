@@ -11,6 +11,13 @@ from discord.ext.commands import Bot
 from discord.ext import tasks, commands
 from ast import For
 
+# Environnement variables
+
+token = os.environ['TOKEN']
+AMPUsername = os.environ['username']
+AMPPass = os.environ['AccountPass']
+Prefix = os.environ['Prefix']
+AMPUrl = os.environ['url']
 
 # Loading functions
 def GetInstancesStatus(AMPUrl: str,
@@ -105,12 +112,6 @@ description = '''
 '''
 
 intents = discord.Intents.default()
-
-token = os.environ['TOKEN']
-AMPUsername = os.environ['username']
-AMPPass = os.environ['AccountPass']
-Prefix = os.environ['Prefix']
-AMPUrl = os.environ['url']
 
 OWNERS = [232011534367326230]
 BLACKLIST = []
