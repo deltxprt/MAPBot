@@ -2,7 +2,7 @@ FROM python:3.10-alpine3.14 as builder
 
 WORKDIR /mapbot
 
-COPY bot .
+COPY ./bot/ /mapbot/bot
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
