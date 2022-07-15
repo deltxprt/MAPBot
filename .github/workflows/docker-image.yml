@@ -28,7 +28,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: Markaplay-Game-Hosting/MAPBot:dev
+          tags: markaplay-game-hosting/mapbot:dev
 
   test:
       
