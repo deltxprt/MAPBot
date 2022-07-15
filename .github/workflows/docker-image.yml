@@ -51,7 +51,7 @@ jobs:
 
   test:
       
-      needs: build
+      needs: push_to_registries
       runs-on: ubuntu-latest
   
       steps:
