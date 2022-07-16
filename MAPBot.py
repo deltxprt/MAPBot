@@ -37,7 +37,7 @@ client = commands.Bot(command_prefix=Prefix, description=description, intents=in
 
 @client.event  # Change the status of the bot
 async def on_ready():
-    Instances = AMPStatus()
+    Instances = AMPStatus(APIUrl)
     while Instances:
         for Instance in Instances:
             await client.change_presence(status=discord.Status.online, activity=discord.Game(
@@ -60,7 +60,7 @@ async def help(ctx):
 
 @client.command()  # command to get the result of all the metrics of all the AMP Instances
 async def GetAllServerStatus(ctx):
-    AllStatus = AMPStatus()
+    AllStatus = AMPStatus(APIUrl)
     for Instance in AllStatus:
         await ctx.send(
             f"```Server Name: {Instance['FriendlyName']}\nGame: {Instance['Game']}\nIsRunning: {Instance['Running']}\nCPU Usage: {Instance['CPU Usage']}%\nMemory Usage: {Instance['Memory Usage']}%\nActive Users: {Instance['Active Users']}\{Instance['Max Users']}```")
@@ -68,7 +68,7 @@ async def GetAllServerStatus(ctx):
 
 @client.command()  # command to get the result of all the metrics of specific AMP Instances
 async def GetServerStatus(ctx, name):
-    AllStatus = AMPStatus()
+    AllStatus = AMPStatus(APIUrl)
     IsFound = []
     for Instance in AllStatus:
         if name in Instance['FriendlyName']:  # match for the user reponse in the list of all the AMP Instances | powershell equivilent would be if($name -like $instance.FriendlyName)
