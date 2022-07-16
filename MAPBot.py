@@ -17,9 +17,10 @@ Prefix = os.environ['Prefix']
 APIUrl = os.environ['DOUrl']
 
 # Loading functions
-def AMPStatus():
-    response = requests.get(APIUrl)
-    return json.loads(response.text)
+def AMPStatus(url):
+    response = requests.get(url)
+    result = json.loads(response.text)
+    return result
 
 # End of functions
 
