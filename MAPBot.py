@@ -15,10 +15,15 @@ from ast import For
 token = os.environ['TOKEN']
 Prefix = os.environ['Prefix']
 APIUrl = os.environ['DOUrl']
+SecretToken = os.environ['SecretToken']
 
 # Loading functions
-def AMPStatus(url):
-    response = requests.get(url)
+def AMPStatus(url,SecretToken):
+    header = {
+        "accept": "application/json",
+        "X-Require-Whisk-Auth": SecretToken
+        }
+    response = requests.get(url, headers=header)
     result = json.loads(response.text)
     return result
 
@@ -37,7 +42,7 @@ client = commands.Bot(command_prefix=Prefix, description=description, intents=in
 
 @client.event  # Change the status of the bot
 async def on_ready():
-    Instances = AMPStatus(APIUrl)
+    Instances = AMPStatus(APIUrl, SecretToken)
     while Instances:
         for Instance in Instances:
             await client.change_presence(status=discord.Status.online, activity=discord.Game(
@@ -60,7 +65,7 @@ async def help(ctx):
 
 @client.command()  # command to get the result of all the metrics of all the AMP Instances
 async def GetAllServerStatus(ctx):
-    AllStatus = AMPStatus(APIUrl)
+    AllStatus = AMPStatus(APIUrl, SecretToken)
     for Instance in AllStatus:
         await ctx.send(
             f"```Server Name: {Instance['FriendlyName']}\nGame: {Instance['Game']}\nIsRunning: {Instance['Running']}\nCPU Usage: {Instance['CPU Usage']}%\nMemory Usage: {Instance['Memory Usage']}%\nActive Users: {Instance['Active Users']}\{Instance['Max Users']}```")
@@ -68,7 +73,7 @@ async def GetAllServerStatus(ctx):
 
 @client.command()  # command to get the result of all the metrics of specific AMP Instances
 async def GetServerStatus(ctx, name):
-    AllStatus = AMPStatus(APIUrl)
+    AllStatus = AMPStatus(APIUrl, SecretToken)
     IsFound = []
     for Instance in AllStatus:
         if name in Instance['FriendlyName']:  # match for the user reponse in the list of all the AMP Instances | powershell equivilent would be if($name -like $instance.FriendlyName)
