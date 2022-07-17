@@ -1,10 +1,9 @@
-import sys
 import os
 
-import discord
 import asyncio
-import requests
 import json
+import requests
+import discord
 from discord.ext.commands.cooldowns import BucketType
 from discord.ext.commands import Bot
 from discord.ext import tasks, commands
@@ -24,10 +23,10 @@ DBHost = os.environ['DBHost']
 
 
 # Loading functions
-def AMPStatus(url,SecretToken):
+def AMPStatus(url, do_token):
     header = {
         "accept": "application/json",
-        "X-Require-Whisk-Auth": SecretToken
+        "X-Require-Whisk-Auth": do_token
         }
     response = requests.get(url, headers=header)
     result = json.loads(response.text)
@@ -61,11 +60,20 @@ for instance in AMPStatus(APIUrl,SecretToken):
     Running = instance['running']
     CPUUsage = instance['CPU Usage']
     MemoryUsage = instance['memoryUsage']
-    mycursor.execute(AddData, (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage))
+    mycursor.execute(AddData, (FriendlyName,
+                               ActiveUsers,
+                               MaxUsers,
+                               Game,
+                               Running,
+                               CPUUsage,
+                               MemoryUsage
+                               )
+                     )
     mydb.commit()
+
 # Starting the bot
 
-description = '''
+Description = '''
     Bot made to manage and report on game servers that are hosted on Markaplay™.
 '''
 
@@ -73,16 +81,20 @@ intents = discord.Intents.default()
 
 OWNERS = [232011534367326230]
 BLACKLIST = []
-client = commands.Bot(command_prefix=Prefix, description=description, intents=intents, help_command=None)
+client = commands.Bot(command_prefix=Prefix,
+                      description=Description,
+                      intents=intents,
+                      help_command=None
+                      )
 
 
 @client.event  # Change the status of the bot
 async def on_ready():
-    Instances = AMPStatus(APIUrl, SecretToken)
-    while Instances:
-        for Instance in Instances:
+    instances_status = AMPStatus(APIUrl, SecretToken)
+    while instances_status:
+        for instance_status in instances_status:
             await client.change_presence(status=discord.Status.online, activity=discord.Game(
-                f"{Instance['Game']} | {Instance['FriendlyName']} | Active Users: {Instance['Active Users']}\{Instance['Max Users']}"))
+                fr"{instance_status['Game']} | {instance_status['FriendlyName']} | Active Users: {instance_status['Active Users']}\{instance_status['Max Users']}"))
             await asyncio.sleep(10)
 
 
@@ -101,31 +113,31 @@ async def help(ctx):
 
 @client.command()  # command to get the result of all the metrics of all the AMP Instances
 async def GetAllServerStatus(ctx):
-    AllStatus = AMPStatus(APIUrl, SecretToken)
-    for Instance in AllStatus:
+    all_status = AMPStatus(APIUrl, SecretToken)
+    for instance_status in all_status:
         await ctx.send(
-            f"```Server Name: {Instance['FriendlyName']}\nGame: {Instance['Game']}\nIsRunning: {Instance['Running']}\nCPU Usage: {Instance['CPU Usage']}%\nMemory Usage: {Instance['Memory Usage']}%\nActive Users: {Instance['Active Users']}\{Instance['Max Users']}```")
+            fr"```Server Name: {instance_status['FriendlyName']}\nGame: {instance_status['Game']}\nIsRunning: {instance_status['Running']}\nCPU Usage: {instance_status['CPU Usage']}%\nMemory Usage: {instance_status['Memory Usage']}%\nActive Users: {instance_status['Active Users']}\{instance_status['Max Users']}```")
 
 
 @client.command()  # command to get the result of all the metrics of specific AMP Instances
 async def GetServerStatus(ctx, name):
-    AllStatus = AMPStatus(APIUrl, SecretToken)
-    IsFound = []
-    for Instance in AllStatus:
-        if name in Instance['FriendlyName']:  # match for the user reponse in the list of all the AMP Instances | powershell equivilent would be if($name -like $instance.FriendlyName)
-            IsFound.append(True)
+    all_status = AMPStatus(APIUrl, SecretToken)
+    is_found = []
+    for instance_status in all_status:
+        if name in instance_status['FriendlyName']:  # match for the user reponse in the list of all the AMP Instances | powershell equivilent would be if($name -like $instance.FriendlyName)
+            is_found.append(True)
             await ctx.send(
-                f"```Server Name: {Instance['FriendlyName']}\nGame: {Instance['Game']}\nIsRunning: {Instance['Running']}\nCPU Usage: {Instance['CPU Usage']}%\nMemory Usage: {Instance['Memory Usage']}%\nActive Users: {Instance['Active Users']}\{Instance['Max Users']}```")
+                f"```Server Name: {instance_status['FriendlyName']}\nGame: {instance_status['Game']}\nIsRunning: {instance_status['Running']}\nCPU Usage: {instance_status['CPU Usage']}%\nMemory Usage: {instance_status['Memory Usage']}%\nActive Users: {instance_status['Active Users']}\{instance_status['Max Users']}```")
         else:
-            IsFound.append(False)
-    if IsFound[True] < 0:
+            is_found.append(False)
+    if is_found[True] < 0:
         await ctx.send("Oh no! The server you are looking for is not found! :pensive:")
 
 
 @client.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
-        await ctx.send("I don't understand :thinking: \n Please do !help to see what commands i can respond to!")
+        await ctx.send(f"I don't understand :thinking: \n Please do {Prefix}help to see what commands i can respond to!")
 
 
 client.run(token)
