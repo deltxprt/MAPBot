@@ -8,6 +8,7 @@ import json
 from discord.ext.commands.cooldowns import BucketType
 from discord.ext.commands import Bot
 from discord.ext import tasks, commands
+import mysql.connector
 from ast import For
 
 # Environnement variables
@@ -16,6 +17,11 @@ token = os.environ['TOKEN']
 Prefix = os.environ['Prefix']
 APIUrl = os.environ['DOUrl']
 SecretToken = os.environ['SecretToken']
+DBName = os.environ['DBName']
+DBPassword = os.environ['DBPassword']
+DBUser = os.environ['DBUser']
+DBHost = os.environ['DBHost']
+
 
 # Loading functions
 def AMPStatus(url,SecretToken):
@@ -27,7 +33,37 @@ def AMPStatus(url,SecretToken):
     result = json.loads(response.text)
     return result
 
-# End of functions
+# Connecting to the database
+
+mydb = mysql.connector.connect(
+  host=DBHost,
+  port="25060",
+  user=DBUser,
+  password=DBPassword,
+  database=DBName
+)
+
+# Writing to Database
+
+mycursor = mydb.cursor()
+
+TableCheck=mycursor.execute("SHOW TABLES")
+if 'InstanceStatus' not in TableCheck:
+    mycursor.execute("CREATE TABLE InstanceStatus (FriendlyName VARCHAR(255), 'Active Users' VARCHAR(255), 'Max Users' VARCHAR(255), Game VARCHAR(255), Running VARCHAR(255), 'CPU Usage' VARCHAR(255), 'Memory Usage' VARCHAR(255)")
+    mydb.commit()
+
+AddData= "INSERT INTO customers (FriendlyName, 'Active Users', 'Max Users', Game, Running, 'CPU Usage', 'Memory Usage') VALUES (%s, %s, %s, %s, %s, %s, %s)"
+for instance in AMPStatus(APIUrl,SecretToken):
+    FriendlyName = instance['name']
+    ActiveUsers = instance['Active Users']
+    MaxUsers = instance['Max Users']
+    Game = instance['Game']
+    Running = instance['running']
+    CPUUsage = instance['CPU Usage']
+    MemoryUsage = instance['memoryUsage']
+    mycursor.execute(AddData, (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage))
+    mydb.commit()
+# Starting the bot
 
 description = '''
     Bot made to manage and report on game servers that are hosted on Markaplay™.
