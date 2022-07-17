@@ -21,70 +21,81 @@ DBPassword = os.environ['DBPassword']
 DBUser = os.environ['DBUser']
 DBHost = os.environ['DBHost']
 
+#loading class
+class StatusInfo:
+    # init
+    def __init__(self, dbcon, tablename):
+        self.url = os.environ['DOUrl']
+        self.do_token = os.environ['SecretToken']
+        self.dbcon = dbcon
+        self.tablename = tablename
+        self.DBHost = DBHost = os.environ['DBHost']
+        self.DBUser = os.environ['DBUser']
+        self.DBPassword = os.environ['DBPassword']
+        self.DBName = os.environ['DBName']
+    # Loading functions
+    def AMPStatus(self):
+        header = {
+            "accept": "application/json",
+            "X-Require-Whisk-Auth": self.do_token
+            }
+        response = requests.get(self.url, headers=header)
+        result = json.loads(response.text)
+        return result
 
-# Loading functions
-def AMPStatus(url, do_token):
-    header = {
-        "accept": "application/json",
-        "X-Require-Whisk-Auth": do_token
-        }
-    response = requests.get(url, headers=header)
-    result = json.loads(response.text)
-    return result
+    def checkTableExists(self):
+        dbcur = self.dbcon.cursor()
+        dbcur.execute("""
+            SELECT COUNT(*)
+            FROM information_schema.tables
+            WHERE table_name = '{0}'
+            """.format(self.tablename.replace('\'', '\'\'')))
+        if dbcur.fetchone()[0] == 1:
+            dbcur.close()
+            return True
 
-def checkTableExists(dbcon, tablename):
-    dbcur = dbcon.cursor()
-    dbcur.execute("""
-        SELECT COUNT(*)
-        FROM information_schema.tables
-        WHERE table_name = '{0}'
-        """.format(tablename.replace('\'', '\'\'')))
-    if dbcur.fetchone()[0] == 1:
         dbcur.close()
-        return True
+        return False
 
-    dbcur.close()
-    return False
+    # Connecting to the database
 
-# Connecting to the database
+    mydb = mysql.connector.connect(
+    host=DBHost,
+    port="25060",
+    user=DBUser,
+    password=DBPassword,
+    database=DBName
+    )
 
-mydb = mysql.connector.connect(
-  host=DBHost,
-  port="25060",
-  user=DBUser,
-  password=DBPassword,
-  database=DBName
-)
+    # Writing to Database
 
-# Writing to Database
+    mycursor = mydb.cursor()
 
-mycursor = mydb.cursor()
+    if checkTableExists(dbcon=mydb, tablename="InstanceStatus") == False:
+        mycursor.execute("SET @ORIG_SQL_REQUIRE_PRIMARY_KEY = @@SQL_REQUIRE_PRIMARY_KEY")
+        mycursor.execute("SET SQL_REQUIRE_PRIMARY_KEY = 0")
+        mycursor.execute("CREATE TABLE InstanceStatus (FriendlyName VARCHAR(255), ActiveUsers VARCHAR(255), MaxUsers VARCHAR(255), Game VARCHAR(255), Running VARCHAR(255), CPUUsage VARCHAR(255), MemoryUsage VARCHAR(255))")
+        mydb.commit()
 
-if checkTableExists(mydb, "InstanceStatus") == False:
-    mycursor.execute("SET @ORIG_SQL_REQUIRE_PRIMARY_KEY = @@SQL_REQUIRE_PRIMARY_KEY")
-    mycursor.execute("SET SQL_REQUIRE_PRIMARY_KEY = 0")
-    mycursor.execute("CREATE TABLE InstanceStatus (FriendlyName VARCHAR(255), ActiveUsers VARCHAR(255), MaxUsers VARCHAR(255), Game VARCHAR(255), Running VARCHAR(255), CPUUsage VARCHAR(255), MemoryUsage VARCHAR(255))")
-    mydb.commit()
-
-AddData= "INSERT INTO InstanceStatus (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-for instance in AMPStatus(APIUrl,SecretToken):
-    FriendlyName = instance['FriendlyName']
-    ActiveUsers = instance['Active Users']
-    MaxUsers = instance['Max Users']
-    Game = instance['Game']
-    Running = instance['Running']
-    CPUUsage = instance['CPU Usage']
-    MemoryUsage = instance['Memory Usage']
-    mycursor.execute(AddData, (FriendlyName,
-                               ActiveUsers,
-                               MaxUsers,
-                               Game,
-                               Running,
-                               CPUUsage,
-                               MemoryUsage
-                               )
-                     )
-    mydb.commit()
+    AddData= "INSERT INTO InstanceStatus (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    for instance in AMPStatus(APIUrl,SecretToken):
+        FriendlyName = instance['FriendlyName']
+        ActiveUsers = instance['Active Users']
+        MaxUsers = instance['Max Users']
+        Game = instance['Game']
+        Running = instance['Running']
+        CPUUsage = instance['CPU Usage']
+        MemoryUsage = instance['Memory Usage']
+        mycursor.execute(AddData, (FriendlyName,
+                                ActiveUsers,
+                                MaxUsers,
+                                Game,
+                                Running,
+                                CPUUsage,
+                                MemoryUsage
+                                )
+                        )
+        mydb.commit()
 
 # Starting the bot
 
@@ -105,7 +116,7 @@ client = commands.Bot(command_prefix=Prefix,
 
 @client.event  # Change the status of the bot
 async def on_ready():
-    instances_status = AMPStatus(APIUrl, SecretToken)
+    instances_status = StatusInfo()
     while instances_status:
         for instance_status in instances_status:
             await client.change_presence(status=discord.Status.online, activity=discord.Game(
@@ -128,7 +139,7 @@ async def help(ctx):
 
 @client.command()  # command to get the result of all the metrics of all the AMP Instances
 async def GetAllServersStatus(ctx):
-    all_status = AMPStatus(APIUrl, SecretToken)
+    all_status = StatusInfo()
     for instance_status in all_status:
         embed = discord.Embed(
             colour=discord.Colour.blurple()
@@ -145,7 +156,7 @@ async def GetAllServersStatus(ctx):
 
 @client.command()  # command to get the result of all the metrics of specific AMP Instances
 async def GetServerStatus(ctx, name):
-    all_status = AMPStatus(APIUrl, SecretToken)
+    all_status = StatusInfo()
     is_found = []
     for instance_status in all_status:
         if name in instance_status['FriendlyName']:  # match for the user reponse in the list of all the AMP Instances | powershell equivilent would be if($name -like $instance.FriendlyName)
