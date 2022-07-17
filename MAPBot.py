@@ -85,7 +85,7 @@ def UpdateDB():
         Running = instance['Running']
         CPUUsage = instance['CPU Usage']
         MemoryUsage = instance['Memory Usage']
-        if mycursor.execute(f"SELECT * FROM dev.InstanceStatus WHERE FriendlyName = {instance['FriendlyName']}") == 0:
+        if mycursor.execute(f"SELECT * FROM dev.InstanceStatus WHERE FriendlyName = '{instance['FriendlyName']}'"):
             mycursor.execute(AddData, (FriendlyName,
                                     ActiveUsers,
                                     MaxUsers,
