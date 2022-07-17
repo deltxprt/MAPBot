@@ -70,7 +70,7 @@ def UpdateDB():
         mydb.commit()
 
     AddData= "INSERT INTO InstanceStatus (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-    for instance in AMPStatus(APIUrl,SecretToken):
+    for instance in AMPStatus():
         FriendlyName = instance['FriendlyName']
         ActiveUsers = instance['Active Users']
         MaxUsers = instance['Max Users']
