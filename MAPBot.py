@@ -61,6 +61,8 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 
 if checkTableExists(mydb, "InstanceStatus") == False:
+    mycursor.execute("SET @ORIG_SQL_REQUIRE_PRIMARY_KEY = @@SQL_REQUIRE_PRIMARY_KEY")
+    mycursor.execute("SET SQL_REQUIRE_PRIMARY_KEY = 0")
     mycursor.execute("CREATE TABLE InstanceStatus (FriendlyName VARCHAR(255), ActiveUsers VARCHAR(255), MaxUsers VARCHAR(255), Game VARCHAR(255), Running VARCHAR(255), CPUUsage VARCHAR(255), MemoryUsage VARCHAR(255))")
     mydb.commit()
 
