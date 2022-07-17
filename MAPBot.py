@@ -9,6 +9,7 @@ from discord.ext.commands import Bot
 from discord.ext import tasks, commands
 import mysql.connector
 from ast import For
+from datetime import datetime
 
 # Environnement variables
 
@@ -20,6 +21,9 @@ DBName = os.environ['DBName']
 DBPassword = os.environ['DBPassword']
 DBUser = os.environ['DBUser']
 DBHost = os.environ['DBHost']
+
+CurrentTime = datetime.now()
+CurrentTime_Format = CurrentTime.strftime("%d/%m/%Y %H:%M:%S")
 
 
 # Loading functions
@@ -66,11 +70,14 @@ def UpdateDB():
     if checkTableExists(mydb, "InstanceStatus") == False:
         mycursor.execute("SET @ORIG_SQL_REQUIRE_PRIMARY_KEY = @@SQL_REQUIRE_PRIMARY_KEY")
         mycursor.execute("SET SQL_REQUIRE_PRIMARY_KEY = 0")
-        mycursor.execute("CREATE TABLE InstanceStatus (FriendlyName VARCHAR(255), ActiveUsers VARCHAR(255), MaxUsers VARCHAR(255), Game VARCHAR(255), Running VARCHAR(255), CPUUsage VARCHAR(255), MemoryUsage VARCHAR(255))")
+        mycursor.execute("CREATE TABLE InstanceStatus (FriendlyName VARCHAR(255), ActiveUsers VARCHAR(255), MaxUsers VARCHAR(255), Game VARCHAR(255), Running VARCHAR(255), CPUUsage VARCHAR(255), MemoryUsage VARCHAR(255), timestamp VARCHAR(255))")
         mydb.commit()
 
-    AddData= "INSERT INTO InstanceStatus (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    AddData= "INSERT INTO InstanceStatus (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, timestamp) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+    UpdateData = "UPDATE InstanceStatus SET ActiveUsers = %s, MaxUsers = %s, Game = %s, Running = %s, CPUUsage = %s, MemoryUsage = %s, timestamp = %s WHERE FriendlyName = %s"
     for instance in AMPStatus():
+        CurrentTime = datetime.now()
+        CurrentTime_Format = CurrentTime.strftime("%d/%m/%Y %H:%M:%S")
         FriendlyName = instance['FriendlyName']
         ActiveUsers = instance['Active Users']
         MaxUsers = instance['Max Users']
@@ -78,16 +85,30 @@ def UpdateDB():
         Running = instance['Running']
         CPUUsage = instance['CPU Usage']
         MemoryUsage = instance['Memory Usage']
-        mycursor.execute(AddData, (FriendlyName,
-                                ActiveUsers,
-                                MaxUsers,
-                                Game,
-                                Running,
-                                CPUUsage,
-                                MemoryUsage
-                                )
-                        )
-        mydb.commit()
+        if mycursor.execute(f"SELECT * FROM dev.InstanceStatus WHERE FriendlyName = {instance['FriendlyName']}") == 0:
+            mycursor.execute(AddData, (FriendlyName,
+                                    ActiveUsers,
+                                    MaxUsers,
+                                    Game,
+                                    Running,
+                                    CPUUsage,
+                                    MemoryUsage,
+                                    CurrentTime_Format
+                                    )
+                            )
+            mydb.commit()
+        else:
+            mycursor.execute(UpdateData, (ActiveUsers,
+                                          MaxUsers,
+                                          Game,
+                                          Running,
+                                          CPUUsage,
+                                          MemoryUsage,
+                                          CurrentTime_Format,
+                                          FriendlyName
+                                          )
+                             )
+            
 
 # Starting the bot
 
