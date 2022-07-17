@@ -32,6 +32,20 @@ def AMPStatus(url, do_token):
     result = json.loads(response.text)
     return result
 
+def checkTableExists(dbcon, tablename):
+    dbcur = dbcon.cursor()
+    dbcur.execute("""
+        SELECT COUNT(*)
+        FROM information_schema.tables
+        WHERE table_name = '{0}'
+        """.format(tablename.replace('\'', '\'\'')))
+    if dbcur.fetchone()[0] == 1:
+        dbcur.close()
+        return True
+
+    dbcur.close()
+    return False
+
 # Connecting to the database
 
 mydb = mysql.connector.connect(
@@ -46,11 +60,11 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 
-mycursor.execute(f"SHOW TABLES EQ InstanceStatus")
+mycursor.execute("SHOW TABLES EQ 'InstanceStatus'")
 
 TableCheck=mycursor.fetchall()
 
-if 'InstanceStatus' not in TableCheck:
+if checkTableExists(mydb, "InstanceStatus") == False:
     mycursor.execute("CREATE TABLE InstanceStatus (FriendlyName VARCHAR(255), 'Active Users' VARCHAR(255), 'Max Users' VARCHAR(255), Game VARCHAR(255), Running VARCHAR(255), 'CPU Usage' VARCHAR(255), 'Memory Usage' VARCHAR(255)")
     mydb.commit()
 
