@@ -75,6 +75,7 @@ jobs:
                 $status = Invoke-RestMethod -Uri https://api.digitalocean.com/v2/apps/$DevAppID/deployments/$deploymentID -Method GET -Headers $header
                 $status = $status.deployment.phase
                 write-output $StatusOutputFormat
+                write-output $status
               }until($status -eq 'ACTIVE' -or $status -eq 'FAILED')
               write-output 'rebuild finished'
             }

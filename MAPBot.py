@@ -60,10 +60,6 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 
-mycursor.execute("SHOW TABLES EQ 'InstanceStatus'")
-
-TableCheck=mycursor.fetchall()
-
 if checkTableExists(mydb, "InstanceStatus") == False:
     mycursor.execute("CREATE TABLE InstanceStatus (FriendlyName VARCHAR(255), 'Active Users' VARCHAR(255), 'Max Users' VARCHAR(255), Game VARCHAR(255), Running VARCHAR(255), 'CPU Usage' VARCHAR(255), 'Memory Usage' VARCHAR(255)")
     mydb.commit()
