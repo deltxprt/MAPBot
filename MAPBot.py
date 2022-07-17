@@ -21,50 +21,42 @@ DBPassword = os.environ['DBPassword']
 DBUser = os.environ['DBUser']
 DBHost = os.environ['DBHost']
 
-#loading class
-class StatusInfo:
-    # init
-    def __init__(self, dbcon, tablename):
-        self.url = os.environ['DOUrl']
-        self.do_token = os.environ['SecretToken']
-        self.dbcon = dbcon
-        self.tablename = tablename
-        self.DBHost = DBHost = os.environ['DBHost']
-        self.DBUser = os.environ['DBUser']
-        self.DBPassword = os.environ['DBPassword']
-        self.DBName = os.environ['DBName']
-    # Loading functions
-    def AMPStatus(self):
-        header = {
-            "accept": "application/json",
-            "X-Require-Whisk-Auth": self.do_token
-            }
-        response = requests.get(self.url, headers=header)
-        result = json.loads(response.text)
-        return result
 
-    def checkTableExists(self):
-        dbcur = self.dbcon.cursor()
-        dbcur.execute("""
-            SELECT COUNT(*)
-            FROM information_schema.tables
-            WHERE table_name = '{0}'
-            """.format(self.tablename.replace('\'', '\'\'')))
-        if dbcur.fetchone()[0] == 1:
-            dbcur.close()
-            return True
+# Loading functions
+def AMPStatus():
+    url = os.environ['DOUrl']
+    do_token = os.environ['SecretToken']
+    header = {
+        "accept": "application/json",
+        "X-Require-Whisk-Auth": do_token
+        }
+    response = requests.get(url, headers=header)
+    result = json.loads(response.text)
+    return result
 
+def checkTableExists(dbcon, tablename):
+    dbcur = dbcon.cursor()
+    dbcur.execute("""
+        SELECT COUNT(*)
+        FROM information_schema.tables
+        WHERE table_name = '{0}'
+        """.format(tablename.replace('\'', '\'\'')))
+    if dbcur.fetchone()[0] == 1:
         dbcur.close()
-        return False
+        return True
 
-    # Connecting to the database
+    dbcur.close()
+    return False
 
+# Connecting to the database
+
+def UpdateDB():
     mydb = mysql.connector.connect(
-    host=DBHost,
+    host=os.environ['DBHost'],
     port="25060",
-    user=DBUser,
-    password=DBPassword,
-    database=DBName
+    user=os.environ['DBUser'],
+    password=os.environ['DBPassword'],
+    database=os.environ['DBName']
     )
 
     # Writing to Database
@@ -116,7 +108,8 @@ client = commands.Bot(command_prefix=Prefix,
 
 @client.event  # Change the status of the bot
 async def on_ready():
-    instances_status = StatusInfo()
+    UpdateDB()
+    instances_status = AMPStatus()
     while instances_status:
         for instance_status in instances_status:
             await client.change_presence(status=discord.Status.online, activity=discord.Game(
@@ -139,7 +132,8 @@ async def help(ctx):
 
 @client.command()  # command to get the result of all the metrics of all the AMP Instances
 async def GetAllServersStatus(ctx):
-    all_status = StatusInfo()
+    UpdateDB()
+    all_status = AMPStatus()
     for instance_status in all_status:
         embed = discord.Embed(
             colour=discord.Colour.blurple()
@@ -156,7 +150,8 @@ async def GetAllServersStatus(ctx):
 
 @client.command()  # command to get the result of all the metrics of specific AMP Instances
 async def GetServerStatus(ctx, name):
-    all_status = StatusInfo()
+    UpdateDB()
+    all_status = AMPStatus()
     is_found = []
     for instance_status in all_status:
         if name in instance_status['FriendlyName']:  # match for the user reponse in the list of all the AMP Instances | powershell equivilent would be if($name -like $instance.FriendlyName)
