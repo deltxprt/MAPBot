@@ -134,11 +134,11 @@ async def GetAllServersStatus(ctx):
             colour=discord.Colour.blurple()
         )
         embed.set_author(name=instance_status['FriendlyName'])
-        embed.add_field(name='Game', value=instance_status['Game'], inline=False)
-        embed.add_field(name='Running', value=instance_status['Running'], inline=False)
-        embed.add_field(name='Active Users', value=f"{instance_status['Active Users']}/{instance_status['Max Users']}", inline=False)
-        embed.add_field(name='CPU Usage', value=instance_status['CPU Usage'], inline=False)
-        embed.add_field(name='Memory Usage', value=instance_status['Memory Usage'], inline=False)
+        embed.add_field(name='Game', value=instance_status['Game'], inline=True)
+        embed.add_field(name='Running', value=instance_status['Running'], inline=True)
+        embed.add_field(name='Active Users', value=f"{instance_status['Active Users']}/{instance_status['Max Users']}", inline=True)
+        embed.add_field(name='CPU Usage', value=instance_status['CPU Usage'], inline=True)
+        embed.add_field(name='Memory Usage', value=instance_status['Memory Usage'], inline=True)
         
         await ctx.send(embed=embed)
 
