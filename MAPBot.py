@@ -72,9 +72,9 @@ for instance in AMPStatus(APIUrl,SecretToken):
     ActiveUsers = instance['Active Users']
     MaxUsers = instance['Max Users']
     Game = instance['Game']
-    Running = instance['running']
+    Running = instance['Running']
     CPUUsage = instance['CPU Usage']
-    MemoryUsage = instance['memoryUsage']
+    MemoryUsage = instance['Memory Usage']
     mycursor.execute(AddData, (FriendlyName,
                                ActiveUsers,
                                MaxUsers,
