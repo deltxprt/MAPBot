@@ -74,7 +74,6 @@ def UpdateDB():
         mydb.commit()
 
     AddData= "INSERT INTO InstanceStatus (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, timestamp) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-    UpdateData = "UPDATE InstanceStatus SET (ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, timestamp WHERE FriendlyName) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
     for instance in AMPStatus():
         CurrentTime = datetime.now()
         CurrentTime_Format = CurrentTime.strftime("%d/%m/%Y %H:%M:%S")
@@ -98,6 +97,7 @@ def UpdateDB():
                             )
             mydb.commit()
         else:
+            UpdateData = f"UPDATE InstanceStatus SET (ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, timestamp WHERE FriendlyName = '{instance['FriendlyName']}') VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
             mycursor.execute(UpdateData, (ActiveUsers,
                                           MaxUsers,
                                           Game,
