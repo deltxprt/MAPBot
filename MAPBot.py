@@ -127,11 +127,18 @@ async def help(ctx):
 
 
 @client.command()  # command to get the result of all the metrics of all the AMP Instances
-async def GetAllServerStatus(ctx):
+async def GetAllServersStatus(ctx):
     all_status = AMPStatus(APIUrl, SecretToken)
     for instance_status in all_status:
-        await ctx.send(
-            fr"```Server Name: {instance_status['FriendlyName']}\nGame: {instance_status['Game']}\nIsRunning: {instance_status['Running']}\nCPU Usage: {instance_status['CPU Usage']}%\nMemory Usage: {instance_status['Memory Usage']}%\nActive Users: {instance_status['Active Users']}\{instance_status['Max Users']}```")
+        embed = discord.Embed(
+            colour=discord.Colour.orange()
+        )
+        embed.set_author(name=instance_status['FriendlyName'])
+        embed.add_field(name='Game', value=instance_status['Game'], inline=True)
+        embed.add_field(name='Running', value=instance_status['Running'], inline=True)
+        embed.add_field(name='Active Users', value=f"{instance_status['Active Users']}\{instance_status['Max Users']}", inline=True)
+        embed.add_field(name='CPU Usage', value=instance_status['CPU Usage'], inline=True)
+        embed.add_field(name='Memory Usage', value=instance_status['Memory Usage'], inline=True)
 
 
 @client.command()  # command to get the result of all the metrics of specific AMP Instances
@@ -141,8 +148,15 @@ async def GetServerStatus(ctx, name):
     for instance_status in all_status:
         if name in instance_status['FriendlyName']:  # match for the user reponse in the list of all the AMP Instances | powershell equivilent would be if($name -like $instance.FriendlyName)
             is_found.append(True)
-            await ctx.send(
-                f"```Server Name: {instance_status['FriendlyName']}\nGame: {instance_status['Game']}\nIsRunning: {instance_status['Running']}\nCPU Usage: {instance_status['CPU Usage']}%\nMemory Usage: {instance_status['Memory Usage']}%\nActive Users: {instance_status['Active Users']}\{instance_status['Max Users']}```")
+            embed = discord.Embed(
+                colour=discord.Colour.orange()
+            )
+            embed.set_author(name=instance_status['FriendlyName'])
+            embed.add_field(name='Game', value=instance_status['Game'], inline=True)
+            embed.add_field(name='Running', value=instance_status['Running'], inline=True)
+            embed.add_field(name='Active Users', value=f"{instance_status['Active Users']}\{instance_status['Max Users']}", inline=True)
+            embed.add_field(name='CPU Usage', value=instance_status['CPU Usage'], inline=True)
+            embed.add_field(name='Memory Usage', value=instance_status['Memory Usage'], inline=True)
         else:
             is_found.append(False)
     if is_found[True] < 0:
