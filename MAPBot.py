@@ -68,7 +68,7 @@ if checkTableExists(mydb, "InstanceStatus") == False:
 
 AddData= "INSERT INTO customers (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage) VALUES (%s, %s, %s, %s, %s, %s, %s)"
 for instance in AMPStatus(APIUrl,SecretToken):
-    FriendlyName = instance['name']
+    FriendlyName = instance['FriendlyName']
     ActiveUsers = instance['Active Users']
     MaxUsers = instance['Max Users']
     Game = instance['Game']
