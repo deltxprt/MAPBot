@@ -85,7 +85,7 @@ def UpdateDB():
         Running = instance['Running']
         CPUUsage = instance['CPU Usage']
         MemoryUsage = instance['Memory Usage']
-        if mycursor.execute(f"SELECT * FROM dev.InstanceStatus WHERE FriendlyName = '{instance['FriendlyName']}'"):
+        if mycursor.execute(f"SELECT * FROM dev.InstanceStatus WHERE FriendlyName != '{instance['FriendlyName']}'"):
             mycursor.execute(AddData, (FriendlyName,
                                     ActiveUsers,
                                     MaxUsers,
@@ -100,6 +100,7 @@ def UpdateDB():
         else:
             UpdateData= f"UPDATE InstanceStatus SET ActiveUsers = {ActiveUsers}, MaxUsers = {MaxUsers} , Game = {Game}, Running = {Running}, CPUUsage = {CPUUsage}, MemoryUsage = {MemoryUsage}, timestamp = {CurrentTime_Format} WHERE FriendlyName = {FriendlyName}"
             mycursor.execute(UpdateData)
+            mydb.commit()
             
 
 # Starting the bot
