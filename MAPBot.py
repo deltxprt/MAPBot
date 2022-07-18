@@ -85,19 +85,10 @@ def UpdateDB():
         MemoryUsage = instance['Memory Usage']
         if mycursor.execute(f"SELECT * FROM dev.InstanceStatus WHERE FriendlyName = '{instance['FriendlyName']}'") == None:
             AddData= "INSERT INTO InstanceStatus (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, timestamp) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-            mycursor.execute(AddData, (FriendlyName,
-                                    ActiveUsers,
-                                    MaxUsers,
-                                    Game,
-                                    Running,
-                                    CPUUsage,
-                                    MemoryUsage,
-                                    CurrentTime_Format
-                                    )
-                            )
+            mycursor.execute(AddData, (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, CurrentTime_Format))
             mydb.commit()
         else:
-            UpdateData= f"UPDATE InstanceStatus SET ActiveUsers = {ActiveUsers}, MaxUsers = {MaxUsers} , Game = {Game}, Running = {Running}, CPUUsage = {CPUUsage}, MemoryUsage = {MemoryUsage}, timestamp = {CurrentTime_Format} WHERE FriendlyName = {FriendlyName}"
+            UpdateData= f"UPDATE InstanceStatus SET ActiveUsers = '{ActiveUsers}', MaxUsers = '{MaxUsers}' , Game = '{Game}', Running = '{Running}', CPUUsage = '{CPUUsage}', MemoryUsage = '{MemoryUsage}', timestamp = '{CurrentTime_Format}' WHERE FriendlyName = '{FriendlyName}'"
             mycursor.execute(UpdateData)
             mydb.commit()
 
