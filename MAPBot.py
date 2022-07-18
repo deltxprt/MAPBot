@@ -83,10 +83,12 @@ def UpdateDB():
         Running = instance['Running']
         CPUUsage = instance['CPU Usage']
         MemoryUsage = instance['Memory Usage']
-        Find_Instance = mycursor.execute(f"SELECT * FROM dev.InstanceStatus WHERE FriendlyName = '{FriendlyName}'")
-        if  Find_Instance is None:
-            AddData= "INSERT INTO InstanceStatus (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, timestamp) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-            mycursor.execute(AddData, (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, CurrentTime_Format))
+        Find_Instance = "SELECT * FROM dev.InstanceStatus WHERE FriendlyName = %s"
+        Found_Instance = mycursor.execute(Find_Instance, FriendlyName)
+        if  Found_Instance is None:
+            AddData = "INSERT INTO InstanceStatus (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, timestamp) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            Data = (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, CurrentTime_Format)
+            mycursor.execute(AddData, Data)
             mydb.commit()
         else:
             UpdateData= "UPDATE InstanceStatus SET ActiveUsers = %s, MaxUsers = %s , Game = %s, Running = %s, CPUUsage = %s, MemoryUsage = %s, timestamp = %s WHERE FriendlyName = %s"
