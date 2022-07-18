@@ -70,7 +70,7 @@ def UpdateDB():
     if checkTableExists(mydb, "InstanceStatus") == False:
         mycursor.execute("SET @ORIG_SQL_REQUIRE_PRIMARY_KEY = @@SQL_REQUIRE_PRIMARY_KEY")
         mycursor.execute("SET SQL_REQUIRE_PRIMARY_KEY = 0")
-        mycursor.execute("CREATE TABLE InstanceStatus (FriendlyName VARCHAR(255), ActiveUsers VARCHAR(255), MaxUsers VARCHAR(255), Game VARCHAR(255), Running VARCHAR(255), CPUUsage VARCHAR(255), MemoryUsage VARCHAR(255), timestamp VARCHAR(255))")
+        mycursor.execute("CREATE TABLE InstanceStatus (FriendlyName VARCHAR(255), ActiveUsers INT, MaxUsers INT, Game VARCHAR(255), Running BOOL, CPUUsage INT, MemoryUsage INT, timestamp DATETIME)")
         mydb.commit()
 
     for instance in AMPStatus():
@@ -89,8 +89,9 @@ def UpdateDB():
             mycursor.execute(AddData, (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, CurrentTime_Format))
             mydb.commit()
         else:
-            UpdateData= f"UPDATE InstanceStatus SET ActiveUsers = '{ActiveUsers}', MaxUsers = '{MaxUsers}' , Game = '{Game}', Running = '{Running}', CPUUsage = '{CPUUsage}', MemoryUsage = '{MemoryUsage}', timestamp = '{CurrentTime_Format}' WHERE FriendlyName = '{FriendlyName}'"
-            mycursor.execute(UpdateData)
+            UpdateData= "UPDATE InstanceStatus SET ActiveUsers = %s, MaxUsers = %s , Game = %s, Running = %s, CPUUsage = %s, MemoryUsage = %s, timestamp = %s WHERE FriendlyName = %s"
+            Data = (ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, CurrentTime_Format, FriendlyName)
+            mycursor.execute(UpdateData, Data)
             mydb.commit()
 
 # Starting the bot
