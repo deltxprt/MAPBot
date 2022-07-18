@@ -73,7 +73,6 @@ def UpdateDB():
         mycursor.execute("CREATE TABLE InstanceStatus (FriendlyName VARCHAR(255), ActiveUsers VARCHAR(255), MaxUsers VARCHAR(255), Game VARCHAR(255), Running VARCHAR(255), CPUUsage VARCHAR(255), MemoryUsage VARCHAR(255), timestamp VARCHAR(255))")
         mydb.commit()
 
-    AddData= "INSERT INTO InstanceStatus (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, timestamp) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
     for instance in AMPStatus():
         CurrentTime = datetime.now()
         CurrentTime_Format = CurrentTime.strftime("%d/%m/%Y %H:%M:%S")
@@ -85,6 +84,7 @@ def UpdateDB():
         CPUUsage = instance['CPU Usage']
         MemoryUsage = instance['Memory Usage']
         if mycursor.execute(f"SELECT * FROM dev.InstanceStatus WHERE FriendlyName = '{instance['FriendlyName']}'") == None:
+            AddData= "INSERT INTO InstanceStatus (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, timestamp) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
             mycursor.execute(AddData, (FriendlyName,
                                     ActiveUsers,
                                     MaxUsers,
