@@ -83,16 +83,16 @@ def UpdateDB():
         Running = instance['Running']
         CPUUsage = instance['CPU Usage']
         MemoryUsage = instance['Memory Usage']
-        Find_Instance = "SELECT * FROM dev.InstanceStatus WHERE FriendlyName = %s"
-        Found_Instance = mycursor.execute(Find_Instance, (FriendlyName))
+        Find_Instance = '''SELECT * FROM %s.InstanceStatus WHERE FriendlyName = %s'''
+        Found_Instance = mycursor.execute(Find_Instance, (os.environ['DBName'], FriendlyName))
         if  Found_Instance is None:
-            AddData = "INSERT INTO InstanceStatus (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, timestamp) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-            Data = (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, CurrentTime_Format)
+            AddData = "INSERT INTO %s.InstanceStatus (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, timestamp) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            Data = (os.environ['DBName'],FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, CurrentTime_Format)
             mycursor.execute(AddData, Data)
             mydb.commit()
         else:
-            UpdateData= "UPDATE InstanceStatus SET ActiveUsers = %s, MaxUsers = %s , Game = %s, Running = %s, CPUUsage = %s, MemoryUsage = %s, timestamp = %s WHERE FriendlyName = %s"
-            Data = (ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, CurrentTime_Format, FriendlyName)
+            UpdateData= "UPDATE %s.InstanceStatus SET ActiveUsers = %s, MaxUsers = %s , Game = %s, Running = %s, CPUUsage = %s, MemoryUsage = %s, timestamp = %s WHERE FriendlyName = %s"
+            Data = (os.environ['DBName'],ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, CurrentTime_Format, FriendlyName)
             mycursor.execute(UpdateData, Data)
             mydb.commit()
 
