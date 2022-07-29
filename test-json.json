@@ -1,0 +1,139 @@
+{
+  "Body": [
+    {
+      "FriendlyName": "ADS01",
+      "InstanceID": "bc48f0b0-0421-4a35-950f-5ece389306a9",
+      "Metrics": {
+        "Active Users": {
+          "MaxValue": 0,
+          "Percent": -2147483648,
+          "RawValue": 0,
+          "Units": ""
+        },
+        "CPU Usage": {
+          "MaxValue": 100,
+          "Percent": 0,
+          "RawValue": 0,
+          "Units": "%"
+        },
+        "Memory Usage": {
+          "MaxValue": 32093,
+          "Percent": 0,
+          "RawValue": 0,
+          "Units": "MB"
+        }
+      },
+      "Module": "ADS",
+      "Running": true,
+      "Suspended": false
+    },
+    {
+      "FriendlyName": "FunCraft Creative",
+      "InstanceID": "411ac25d-d52c-47da-a1c7-12db5b556d1b",
+      "Metrics": {
+        "Active Users": {
+          "MaxValue": 10,
+          "Percent": 0,
+          "RawValue": 0,
+          "Units": ""
+        },
+        "CPU Usage": {
+          "MaxValue": 100,
+          "Percent": 0,
+          "RawValue": 0,
+          "Units": "%"
+        },
+        "Memory Usage": {
+          "MaxValue": 4096,
+          "Percent": 112,
+          "RawValue": 4590,
+          "Units": "MB"
+        }
+      },
+      "Module": "Minecraft",
+      "Running": true,
+      "Suspended": false
+    },
+    {
+      "FriendlyName": "FunCraft Survival Season 1",
+      "InstanceID": "33a208db-15b1-410a-a3b5-eefede356d6a",
+      "Metrics": {
+        "Active Users": {
+          "MaxValue": 10,
+          "Percent": 0,
+          "RawValue": 0,
+          "Units": ""
+        },
+        "CPU Usage": {
+          "MaxValue": 100,
+          "Percent": 0,
+          "RawValue": 0,
+          "Units": "%"
+        },
+        "Memory Usage": {
+          "MaxValue": 4096,
+          "Percent": 99,
+          "RawValue": 4056,
+          "Units": "MB"
+        }
+      },
+      "Module": "Minecraft",
+      "Running": true,
+      "Suspended": false
+    },
+    {
+      "FriendlyName": "FunCraft Survival Season 2",
+      "InstanceID": "81fad4eb-b093-49ba-bffd-834fea3dae9c",
+      "Metrics": {
+        "Active Users": {
+          "MaxValue": 10,
+          "Percent": 0,
+          "RawValue": 0,
+          "Units": ""
+        },
+        "CPU Usage": {
+          "MaxValue": 100,
+          "Percent": 0,
+          "RawValue": 0,
+          "Units": "%"
+        },
+        "Memory Usage": {
+          "MaxValue": 12288,
+          "Percent": 74,
+          "RawValue": 9105,
+          "Units": "MB"
+        }
+      },
+      "Module": "Minecraft",
+      "Running": true,
+      "Suspended": false
+    },
+    {
+      "FriendlyName": "The Club Minecraft",
+      "InstanceID": "34dc81e5-755b-4e77-969f-2c1823c69bab",
+      "Metrics": {
+        "Active Users": {
+          "MaxValue": 15,
+          "Percent": 0,
+          "RawValue": 0,
+          "Units": ""
+        },
+        "CPU Usage": {
+          "MaxValue": 100,
+          "Percent": 0,
+          "RawValue": 0,
+          "Units": "%"
+        },
+        "Memory Usage": {
+          "MaxValue": 8192,
+          "Percent": 0,
+          "RawValue": 0,
+          "Units": "MB"
+        }
+      },
+      "Module": "Minecraft",
+      "Running": true,
+      "Suspended": false
+    }
+  ]
+}
