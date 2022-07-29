@@ -76,12 +76,12 @@ def UpdateDB():
         CurrentTime = datetime.now()
         CurrentTime_Format = CurrentTime.strftime("%d/%m/%Y %H:%M:%S")
         FriendlyName = instance['FriendlyName']
-        ActiveUsers = instance['Active Users']
-        MaxUsers = instance['Max Users']
-        Game = instance['Game']
+        ActiveUsers = instance['Metrics']['Active Users']['RawValue']
+        MaxUsers = instance['Metrics']['Active Users']['MaxValue']
+        Game = instance['Module']
         Running = instance['Running']
-        CPUUsage = instance['CPU Usage']
-        MemoryUsage = instance['Memory Usage']
+        CPUUsage = instance['Metrics']['CPU Usage']['Percent']
+        MemoryUsage = instance['Metrics']['Memory Usage']['Percent']
         Find_Instance = '''SELECT * FROM InstanceStatus WHERE FriendlyName = %s'''
         Found_Instance = mycursor.execute(Find_Instance, (FriendlyName))
         if  Found_Instance is None:
@@ -119,7 +119,7 @@ async def on_ready():
     while instances_status:
         for instance_status in instances_status:
             await client.change_presence(status=discord.Status.online, activity=discord.Game(
-                fr"{instance_status['Game']} | {instance_status['FriendlyName']} | Active Users: {instance_status['Active Users']}\{instance_status['Max Users']}"))
+                fr"{instance_status['Module']} | {instance_status['FriendlyName']} | Active Users: {instance_status['Metrics']['Active Users']['RawValue']}\{instance_status['Metrics']['Active Users']['MaxValue']}"))
             await asyncio.sleep(10)
 
 
@@ -145,11 +145,11 @@ async def GetAllServersStatus(ctx):
             colour=discord.Colour.blurple()
         )
         embed.set_author(name=instance_status['FriendlyName'])
-        embed.add_field(name='Game', value=instance_status['Game'], inline=True)
+        embed.add_field(name='Game', value=instance_status['Module'], inline=True)
         embed.add_field(name='Running', value=instance_status['Running'], inline=True)
-        embed.add_field(name='Active Users', value=f"{instance_status['Active Users']}/{instance_status['Max Users']}", inline=True)
-        embed.add_field(name='CPU Usage', value=f"{instance_status['CPU Usage']}%", inline=True)
-        embed.add_field(name='Memory Usage', value=f"{instance_status['Memory Usage']}%", inline=True)
+        embed.add_field(name='Active Users', value=f"{instance_status['Metrics']['Active Users']['RawValue']}/{instance_status['Metrics']['Active Users']['MaxValue']}", inline=True)
+        embed.add_field(name='CPU Usage', value=f"{instance_status['Metrics']['CPU Usage']['Percent']}%", inline=True)
+        embed.add_field(name='Memory Usage', value=f"{instance_status['Metrics']['Memory Usage']['Percent']}%", inline=True)
         
         await ctx.send(embed=embed)
 
@@ -166,11 +166,11 @@ async def GetServerStatus(ctx, name):
                 colour=discord.Colour.blurple()
             )
             embed.set_author(name=instance_status['FriendlyName'])
-            embed.add_field(name='Game', value=instance_status['Game'], inline=True)
+            embed.add_field(name='Game', value=instance_status['Module'], inline=True)
             embed.add_field(name='Running', value=instance_status['Running'], inline=True)
-            embed.add_field(name='Active Users', value=f"{instance_status['Active Users']}/{instance_status['Max Users']}", inline=True)
-            embed.add_field(name='CPU Usage', value=f"{instance_status['CPU Usage']}%", inline=True)
-            embed.add_field(name='Memory Usage', value=f"{instance_status['Memory Usage']}%", inline=True)
+            embed.add_field(name='Active Users', value=f"{instance_status['Metrics']['Active Users']['RawValue']}/{instance_status['Metrics']['Active Users']['MaxValue']}", inline=True)
+            embed.add_field(name='CPU Usage', value=f"{instance_status['Metrics']['CPU Usage']['Percent']}%", inline=True)
+            embed.add_field(name='Memory Usage', value=f"{instance_status['Metrics']['Memory Usage']['Percent']}%", inline=True)
             await ctx.send(embed=embed)
         else:
             is_found.append(False)
