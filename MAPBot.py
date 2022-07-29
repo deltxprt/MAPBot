@@ -35,9 +35,8 @@ def AMPStatus():
         "X-Require-Whisk-Auth": do_token
         }
     response = requests.get(url, headers=header)
-    result = json.loads(response.text)
-    result = result['Body']
-    return result
+    result = json.load(response.text)
+    return result['Body']
 
 def checkTableExists(dbcon, tablename):
     dbcur = dbcon.cursor()
