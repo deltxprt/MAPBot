@@ -114,7 +114,7 @@ client = commands.Bot(command_prefix=Prefix,
 
 @client.event  # Change the status of the bot
 async def on_ready():
-    UpdateDB()
+    #UpdateDB()
     instances_status = AMPStatus(APIUrl, SecretToken)
     while instances_status:
         for instance_status in instances_status:
@@ -138,7 +138,7 @@ async def help(ctx):
 
 @client.command()  # command to get the result of all the metrics of all the AMP Instances
 async def GetAllServersStatus(ctx):
-    UpdateDB()
+    #UpdateDB()
     all_status = AMPStatus(APIUrl, SecretToken)
     for instance_status in all_status:
         embed = discord.Embed(
@@ -156,7 +156,7 @@ async def GetAllServersStatus(ctx):
 
 @client.command()  # command to get the result of all the metrics of specific AMP Instances
 async def GetServerStatus(ctx, name):
-    UpdateDB()
+    #UpdateDB()
     all_status = AMPStatus(APIUrl, SecretToken)
     is_found = []
     for instance_status in all_status:
