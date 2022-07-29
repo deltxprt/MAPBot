@@ -36,6 +36,7 @@ def AMPStatus():
         }
     response = requests.get(url, headers=header)
     result = json.loads(response.text)
+    result = result['Body']
     return result
 
 def checkTableExists(dbcon, tablename):
