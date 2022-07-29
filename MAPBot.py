@@ -27,16 +27,15 @@ CurrentTime_Format = CurrentTime.strftime("%d/%m/%Y %H:%M:%S")
 
 
 # Loading functions
-def AMPStatus():
-    url = os.environ['DOUrl']
-    do_token = os.environ['SecretToken']
+def AMPStatus(url, do_token):
     header = {
         "accept": "application/json",
-        "X-Require-Whisk-Auth": do_token
+        "Authorization": f"Basic {do_token}"
         }
-    response = requests.get(url, headers=header)
-    result = json.load(response.text)
-    return result['Body']
+    response = requests.post(url, headers=header)
+    result = json.loads(response.text)
+    result = result['Body']
+    return result
 
 def checkTableExists(dbcon, tablename):
     dbcur = dbcon.cursor()
@@ -73,7 +72,7 @@ def UpdateDB():
         mycursor.execute("CREATE TABLE InstanceStatus (FriendlyName VARCHAR(255), ActiveUsers INT, MaxUsers INT, Game VARCHAR(255), Running BOOL, CPUUsage INT, MemoryUsage INT, timestamp DATETIME)")
         mydb.commit()
 
-    for instance in AMPStatus():
+    for instance in AMPStatus(APIUrl, SecretToken):
         CurrentTime = datetime.now()
         CurrentTime_Format = CurrentTime.strftime("%d/%m/%Y %H:%M:%S")
         FriendlyName = instance['FriendlyName']
@@ -116,7 +115,7 @@ client = commands.Bot(command_prefix=Prefix,
 @client.event  # Change the status of the bot
 async def on_ready():
     UpdateDB()
-    instances_status = AMPStatus()
+    instances_status = AMPStatus(APIUrl, SecretToken)
     while instances_status:
         for instance_status in instances_status:
             await client.change_presence(status=discord.Status.online, activity=discord.Game(
@@ -140,7 +139,7 @@ async def help(ctx):
 @client.command()  # command to get the result of all the metrics of all the AMP Instances
 async def GetAllServersStatus(ctx):
     UpdateDB()
-    all_status = AMPStatus()
+    all_status = AMPStatus(APIUrl, SecretToken)
     for instance_status in all_status:
         embed = discord.Embed(
             colour=discord.Colour.blurple()
@@ -158,7 +157,7 @@ async def GetAllServersStatus(ctx):
 @client.command()  # command to get the result of all the metrics of specific AMP Instances
 async def GetServerStatus(ctx, name):
     UpdateDB()
-    all_status = AMPStatus()
+    all_status = AMPStatus(APIUrl, SecretToken)
     is_found = []
     for instance_status in all_status:
         if name in instance_status['FriendlyName']:  # match for the user reponse in the list of all the AMP Instances | powershell equivilent would be if($name -like $instance.FriendlyName)
