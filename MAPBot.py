@@ -7,6 +7,7 @@ import discord
 from discord.ext.commands.cooldowns import BucketType
 from discord.ext.commands import Bot
 from discord.ext import tasks, commands
+from discord.ui import Select, View
 import mysql.connector
 from ast import For
 from datetime import datetime
@@ -180,38 +181,18 @@ async def GetServerStatus(ctx, name):
         
 
 @client.command()
-@commands.check(OWNERS)
-async def load(ctx, extension):
-    client.load_extension(f'{extension}')
-    await ctx.send(f'{extension} has been loaded!')
-        
-@client.command()
-@commands.check(OWNERS)
-async def unload(ctx, extension):
-    client.unload_extension(f'{extension}')
-    await ctx.send(f'{extension} has been unloaded!')
-
-@client.command()
-@commands.check(OWNERS)
-async def reload(ctx, extension):
-    client.unload_extension(f'{extension}')
-    client.load_extension(f'{extension}')
-    await ctx.send(f'{extension} has been reloaded!')
-
-@reload.error
-async def reload_error(ctx, error):
-    if isinstance(error, commands.CheckFailure):
-        await ctx.send('Only the owner can do this command!')
-    elif isinstance(error, commands.ExtensionNotLoaded):
-        await ctx.send('The extension is unloaded!')
+async def manage(self, ctx):
+    servers = Select(options=[
+        discord.SelectOption(label = "test1", description = "This is a test"),
+        discord.SelectOption(label = "test2", description = "This is another test"),
+    ])
+    view = View()
+    view.add_item(servers)
+    await ctx.send("Choose the server", view=view)
 
 @client.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         await ctx.send(f"I don't understand :thinking: \n Please do {Prefix}help to see what commands i can respond to!")
-
-for filename in os.listdir('./'):
-    if filename.endswith('.py') and filename != 'MAPBot.py':
-        client.load_extension(f'{filename[:-3]}')
 
 client.run(token)
