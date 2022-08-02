@@ -3,6 +3,7 @@ FROM python:3.10-alpine3.14 as builder
 WORKDIR /mapbot
 
 COPY **.py .
+COPY cogs .
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -20,6 +21,7 @@ FROM python:3.10-alpine3.14
 WORKDIR /mapbot
 
 COPY --from=builder /mapbot/**.py .
+COPY --from=builder /mapbot/cogs .
 COPY --from=builder /mapbot/wheels /wheels
 COPY --from=builder /mapbot/requirements.txt .
 
