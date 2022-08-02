@@ -182,20 +182,20 @@ async def GetServerStatus(ctx, name):
 @client.command()
 @commands.check(OWNERS)
 async def load(ctx, extension):
-    client.load_extension(f'mydb.{extension}')
+    client.load_extension(f'{extension}')
     await ctx.send(f'{extension} has been loaded!')
         
 @client.command()
 @commands.check(OWNERS)
 async def unload(ctx, extension):
-    client.unload_extension(f'mydb.{extension}')
+    client.unload_extension(f'{extension}')
     await ctx.send(f'{extension} has been unloaded!')
 
 @client.command()
 @commands.check(OWNERS)
 async def reload(ctx, extension):
-    client.unload_extension(f'mydb.{extension}')
-    client.load_extension(f'mydb.{extension}')
+    client.unload_extension(f'{extension}')
+    client.load_extension(f'{extension}')
     await ctx.send(f'{extension} has been reloaded!')
 
 @reload.error
