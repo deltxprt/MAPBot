@@ -7,7 +7,6 @@ import discord
 from discord.ext.commands.cooldowns import BucketType
 from discord.ext.commands import Bot
 from discord.ext import tasks, commands
-from discord.ui import Select, View
 import mysql.connector
 from ast import For
 from datetime import datetime
