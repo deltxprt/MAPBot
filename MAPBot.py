@@ -176,12 +176,42 @@ async def GetServerStatus(ctx, name):
             is_found.append(False)
     if is_found[True] < 0:
         await ctx.send("Oh no! The server you are looking for is not found! :pensive:")
+        
+        
 
+@client.command()
+@commands.check(OWNERS)
+async def load(ctx, extension):
+    client.load_extension(f'mydb.{extension}')
+    await ctx.send(f'{extension} has been loaded!')
+        
+@client.command()
+@commands.check(OWNERS)
+async def unload(ctx, extension):
+    client.unload_extension(f'mydb.{extension}')
+    await ctx.send(f'{extension} has been unloaded!')
+
+@client.command()
+@commands.check(OWNERS)
+async def reload(ctx, extension):
+    client.unload_extension(f'mydb.{extension}')
+    client.load_extension(f'mydb.{extension}')
+    await ctx.send(f'{extension} has been reloaded!')
+
+@reload.error
+async def reload_error(ctx, error):
+    if isinstance(error, commands.CheckFailure):
+        await ctx.send('Only the owner can do this command!')
+    elif isinstance(error, commands.ExtensionNotLoaded):
+        await ctx.send('The extension is unloaded!')
 
 @client.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         await ctx.send(f"I don't understand :thinking: \n Please do {Prefix}help to see what commands i can respond to!")
 
+for filename in os.listdir('./cogs'):
+    if filename.endswith('.py'):
+        client.load_extension(f'cogs.{filename[:-3]}')
 
 client.run(token)
