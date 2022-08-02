@@ -210,7 +210,7 @@ async def GetServerStatus(ctx, name):
         
         
 
-async def colour(ctx):
+async def test(ctx):
     """Sends a message with our dropdown containing colours"""
 
     # Create the view containing our dropdown
