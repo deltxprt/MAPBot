@@ -20,3 +20,6 @@ class Management(commands.Cog):
         view = View()
         view.add_item(servers)
         await ctx.send("Choose the server", view=view)
+        
+def setup(client):
+    client.add_cog(Management(client))
