@@ -209,7 +209,7 @@ async def GetServerStatus(ctx, name):
         await ctx.send("Oh no! The server you are looking for is not found! :pensive:")
         
         
-
+@client.command()
 async def test(ctx):
     """Sends a message with our dropdown containing colours"""
 
