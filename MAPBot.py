@@ -210,8 +210,8 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         await ctx.send(f"I don't understand :thinking: \n Please do {Prefix}help to see what commands i can respond to!")
 
-for filename in os.listdir('./cogs'):
+for filename in os.listdir():
     if filename.endswith('.py'):
-        client.load_extension(f'cogs.{filename[:-3]}')
+        client.load_extension(f'{filename[:-3]}')
 
 client.run(token)
