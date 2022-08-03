@@ -14,10 +14,9 @@ import (
 
 // Bot parameters
 var (
-	GuildID  = flag.String("guild", "", "406959709980065802")
-	BotToken = flag.String("token", "", "LZhGIWvZAkvTDJf82Vv_RYzikZcZAaaC")
-	AppID    = flag.String("app", "", "990681692933095475")
-	Cleanup  = flag.Bool("cleanup", true, "Cleanup of commands")
+	GuildID  = flag.String("guild", "", "Test guild ID")
+	BotToken = flag.String("token", "", "Bot access token")
+	AppID    = flag.String("app", "", "Application ID")
 )
 
 var s *discordgo.Session
