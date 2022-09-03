@@ -7,7 +7,7 @@ import discord
 from discord.ext.commands.cooldowns import BucketType
 from discord.ext.commands import Bot
 from discord.ext import tasks, commands
-#import mysql.connector
+import mysql.connector
 from ast import For
 from datetime import datetime
 
@@ -33,6 +33,14 @@ def AMPStatus(url, do_token):
     result = json.loads(response.text)
     result = result['Body']
     return result
+
+#connecting to the database
+
+mydb = mysql.connector.connect(
+  host="mysql",
+  user="root",
+  password="root"
+)
 
 # Starting the bot
 
