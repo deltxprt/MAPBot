@@ -14,5 +14,5 @@ spec:
         app: discord-dev
     spec:
       containers:
-      - image: gcr.io/FROM ghcr.io/markaplay-game-hosting/mapbot:dev
+      - image: ghcr.io/markaplay-game-hosting/mapbot:dev
         name: discord-dev
