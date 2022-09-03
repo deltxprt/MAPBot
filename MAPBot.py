@@ -17,10 +17,10 @@ token = os.environ['TOKEN']
 Prefix = os.environ['Prefix']
 APIUrl = os.environ['DOUrl']
 SecretToken = os.environ['SecretToken']
-DBName = os.environ['DBName']
-DBPassword = os.environ['DBPassword']
-DBUser = os.environ['DBUser']
-DBHost = os.environ['DBHost']
+#DBName = os.environ['DBName']
+#DBPassword = os.environ['DBPassword']
+#DBUser = os.environ['DBUser']
+#DBHost = os.environ['DBHost']
 
 CurrentTime = datetime.now()
 CurrentTime_Format = CurrentTime.strftime("%d/%m/%Y %H:%M:%S")
@@ -83,7 +83,7 @@ def checkTableExists(dbcon, tablename):
     return False
 
 # Connecting to the database
-
+'''
 def UpdateDB():
     mydb = mysql.connector.connect(
     host=os.environ['DBHost'],
@@ -125,7 +125,7 @@ def UpdateDB():
             Data = (ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, CurrentTime_Format, FriendlyName)
             mycursor.execute(UpdateData, Data)
             mydb.commit()
-
+'''
 # Starting the bot
 
 Description = '''

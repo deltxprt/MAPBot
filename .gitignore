@@ -1,2 +1,5 @@
 .idea
 .json
+node_modules
+.env
+config.json
