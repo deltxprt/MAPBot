@@ -17,10 +17,6 @@ token = os.environ['TOKEN']
 Prefix = os.environ['Prefix']
 APIUrl = os.environ['DOUrl']
 SecretToken = os.environ['SecretToken']
-#DBName = os.environ['DBName']
-#DBPassword = os.environ['DBPassword']
-#DBUser = os.environ['DBUser']
-#DBHost = os.environ['DBHost']
 
 CurrentTime = datetime.now()
 CurrentTime_Format = CurrentTime.strftime("%d/%m/%Y %H:%M:%S")
@@ -37,64 +33,6 @@ def AMPStatus(url, do_token):
     result = json.loads(response.text)
     result = result['Body']
     return result
-
-# def checkTableExists(dbcon, tablename):
-#     dbcur = dbcon.cursor()
-#     dbcur.execute("""
-#         SELECT COUNT(*)
-#         FROM information_schema.tables
-#         WHERE table_name = '{0}'
-#         """.format(tablename.replace('\'', '\'\'')))
-#     if dbcur.fetchone()[0] == 1:
-#         dbcur.close()
-#         return True
-
-#     dbcur.close()
-#     return False
-
-# # Connecting to the database
-
-# def UpdateDB():
-#     mydb = mysql.connector.connect(
-#     host=os.environ['DBHost'],
-#     port="25060",
-#     user=os.environ['DBUser'],
-#     password=os.environ['DBPassword'],
-#     database=os.environ['DBName']
-#     )
-
-#     # Writing to Database
-
-#     mycursor = mydb.cursor()
-
-#     if checkTableExists(mydb, "InstanceStatus") == False:
-#         mycursor.execute("SET @ORIG_SQL_REQUIRE_PRIMARY_KEY = @@SQL_REQUIRE_PRIMARY_KEY")
-#         mycursor.execute("SET SQL_REQUIRE_PRIMARY_KEY = 0")
-#         mycursor.execute("CREATE TABLE InstanceStatus (FriendlyName VARCHAR(255), ActiveUsers INT, MaxUsers INT, Game VARCHAR(255), Running BOOL, CPUUsage INT, MemoryUsage INT, timestamp DATETIME)")
-#         mydb.commit()
-
-#     for instance in AMPStatus(APIUrl, SecretToken):
-#         CurrentTime = datetime.now()
-#         CurrentTime_Format = CurrentTime.strftime("%d/%m/%Y %H:%M:%S")
-#         FriendlyName = instance['FriendlyName']
-#         ActiveUsers = instance['Metrics']['Active Users']['RawValue']
-#         MaxUsers = instance['Metrics']['Active Users']['MaxValue']
-#         Game = instance['Module']
-#         Running = instance['Running']
-#         CPUUsage = instance['Metrics']['CPU Usage']['Percent']
-#         MemoryUsage = instance['Metrics']['Memory Usage']['Percent']
-#         Find_Instance = '''SELECT * FROM InstanceStatus WHERE FriendlyName = %s'''
-#         Found_Instance = mycursor.execute(Find_Instance, (FriendlyName))
-#         if  Found_Instance is None:
-#             AddData = "INSERT INTO InstanceStatus (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, timestamp) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-#             Data = (FriendlyName, ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, CurrentTime_Format)
-#             mycursor.execute(AddData, Data)
-#             mydb.commit()
-#         else:
-#             UpdateData= "UPDATE InstanceStatus SET ActiveUsers = %s, MaxUsers = %s , Game = %s, Running = %s, CPUUsage = %s, MemoryUsage = %s, timestamp = %s WHERE FriendlyName = %s"
-#             Data = (ActiveUsers, MaxUsers, Game, Running, CPUUsage, MemoryUsage, CurrentTime_Format, FriendlyName)
-#             mycursor.execute(UpdateData, Data)
-#             mydb.commit()
 
 # Starting the bot
 
