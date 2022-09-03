@@ -180,15 +180,6 @@ async def GetServerStatus(ctx, name):
         
         
 
-async def test(ctx):
-    """Sends a message with our dropdown containing colours"""
-
-    # Create the view containing our dropdown
-    view = DropdownView()
-
-    # Sending a message containing our view
-    await ctx.send('Pick your favourite colour:', view=view)
-
 @client.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
