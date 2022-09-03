@@ -44,11 +44,7 @@ intents = discord.Intents.default()
 
 OWNERS = [232011534367326230]
 BLACKLIST = []
-client = commands.Bot(command_prefix=Prefix,
-                      description=Description,
-                      intents=intents,
-                      help_command=None
-                      )
+client = commands.Bot(command_prefix=Prefix,description=Description,intents=intents,help_command=None)
 
 
 @client.event  # Change the status of the bot
