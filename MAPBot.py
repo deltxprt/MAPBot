@@ -40,7 +40,8 @@ Description = '''
     Bot made to manage and report on game servers that are hosted on Markaplay™.
 '''
 
-intents = discord.Intents.all() 
+intents = discord.Intents.default()
+intents.message_content = True
 
 OWNERS = [232011534367326230]
 BLACKLIST = []
