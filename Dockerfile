@@ -1,28 +1,16 @@
-FROM python:3.10-alpine3.14 as builder
+FROM golang:1.19-alpine3.17
 
 WORKDIR /mapbot
 
-COPY **.py .
-
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+COPY ./mapbotv2 .
 
 RUN apk upgrade \
-    python -V
+    apk update
 
-COPY requirements.txt .
-
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /mapbot/wheels -r requirements.txt
-
-
-FROM python:3.10-alpine3.14
+FROM golang:1.19-alpine3.17
 
 WORKDIR /mapbot
 
-COPY --from=builder /mapbot/**.py .
-COPY --from=builder /mapbot/wheels /wheels
-COPY --from=builder /mapbot/requirements.txt .
+COPY --from=builder /mapbot/mapbotv2 .
 
-RUN pip install --no-cache /wheels/*
-
-CMD [ "python", "./MAPBot.py" ]
+CMD [ "./mapbotv2" ]
