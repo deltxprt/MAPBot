@@ -1,4 +1,4 @@
-module main.go
+module mapbot
 
 go 1.19
 
