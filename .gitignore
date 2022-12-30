@@ -1,4 +1,4 @@
-.idea
-.json
-.env
-.exe
+**.idea
+**.json
+**.env
+**.exe
