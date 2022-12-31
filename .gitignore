@@ -1,4 +1,5 @@
 **.idea
 **.json
+**node_modules
 **.env
-**.exe
+**config.json

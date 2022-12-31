@@ -8,8 +8,7 @@ on:
     tags:
       - 'v*'
   pull_request:
-    branches:
-      - 'master'
+    branches: [ "main", "dev" ]
 
 jobs:
   build:
