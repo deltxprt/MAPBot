@@ -11,7 +11,7 @@ import (
 
 var (
 	BotToken       = os.Getenv("BOT_TOKEN")
-	BotPrefix      = flag.String("prefix", "^", "Bot prefix")
+	BotPrefix      = os.Getenv("BOT_PREFIX")
 	RemoveCommands = flag.Bool("rmcmd", true, "Remove all commands after shutdowning or not")
 	GuildID        = flag.String("guild", "406959709980065802", "Test guild ID. If not passed - bot registers commands globally")
 )
