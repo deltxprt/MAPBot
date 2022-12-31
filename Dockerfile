@@ -14,6 +14,6 @@ FROM golang:1.19-alpine3.17
 
 WORKDIR /mapbot
 
-COPY ./mapbot-v2 .
+COPY --from=builder ./mapbot-v2 .
 
 CMD [ "./mapbot-v2" ]
