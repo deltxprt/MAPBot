@@ -7,7 +7,6 @@ import (
 	"os/signal"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/joho/godotenv"
 )
 
 var (
@@ -31,11 +30,6 @@ func init() {
 }
 
 func main() {
-	godoterror := godotenv.Load()
-
-	if godoterror != nil {
-		log.Fatal("Error loading .env file")
-	}
 	s.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
 		log.Printf("Logged in as: %v#%v", s.State.User.Username, s.State.User.Discriminator)
 	})
