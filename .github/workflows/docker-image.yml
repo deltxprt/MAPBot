@@ -35,7 +35,7 @@ jobs:
       - name: Upload Go test results
         uses: actions/upload-artifact@v3
         with:
-          name: mapbot-v2-go1.19
+          name: mapbot-v2
           path: discord
       
   push_to_registries:
@@ -59,7 +59,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
-          name: mapbot-v2-go1.19
+          name: mapbot-v2
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
