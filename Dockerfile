@@ -3,10 +3,14 @@ FROM golang:1.19-alpine3.17
 RUN apk upgrade \
     && apk update
 
-WORKDIR /mapbot
+WORKDIR /building
 
 COPY . .
 
 RUN go build ./cmd/discord
 
-CMD [ "./mapbot-v2" ]
+WORKDIR /mapbot
+
+RUN mv /building/discord /mapbotv2
+
+CMD [ "/mapbotv2" ]
