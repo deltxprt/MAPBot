@@ -73,7 +73,7 @@ jobs:
         uses: docker/metadata-action@v2
         with:
           images: |
-            vincdelta/MAPBot
+            vincdelta/discordbot
             ghcr.io/${{ github.repository }}
           tags: |
             type=ref,event=branch
