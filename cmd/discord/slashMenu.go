@@ -16,6 +16,54 @@ var (
 
 	commands = []*discordgo.ApplicationCommand{
 		{
+			Name:        "server-administration",
+			Description: "Administer a Server",
+
+			Options: []*discordgo.ApplicationCommandOption{
+				// When a command has subcommands/subcommand groups
+				// It must not have top-level options, they aren't accesible in the UI
+				// in this case (at least not yet), so if a command has
+				// subcommands/subcommand any groups registering top-level options
+				// will cause the registration of the command to fail
+
+				// Also, you can create both subcommand groups and subcommands
+				// in the command at the same time. But, there's some limits to
+				// nesting, count of subcommands (top level and nested) and options.
+				// Read the intro of slash-commands docs on Discord dev portal
+				// to get more information
+				{
+					Name:        "server-name",
+					Description: "the name of the server to Administer",
+					Type:        discordgo.ApplicationCommandOptionString,
+					Required:    true,
+				},
+				{
+					Name:        "action",
+					Description: "Admin action to perform",
+					Choices: []*discordgo.ApplicationCommandOptionChoice{
+						{
+							Name:  "restart",
+							Value: "restart",
+						},
+						{
+							Name:  "stop",
+							Value: "stop",
+						},
+						{
+							Name:  "start",
+							Value: "start",
+						},
+						{
+							Name:  "status",
+							Value: "status",
+						},
+					},
+					Type:     discordgo.ApplicationCommandOptionString,
+					Required: true,
+				},
+			},
+		},
+		{
 			Name: "basic-command",
 			// All commands and options must have a description
 			// Commands/options without description will fail the registration
@@ -199,6 +247,52 @@ var (
 	}
 
 	commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
+		"server-administration": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			// Access options in the order provided by the user.
+			options := i.ApplicationCommandData().Options
+
+			// Or convert the slice into a map
+			optionMap := make(map[string]*discordgo.ApplicationCommandInteractionDataOption, len(options))
+			for _, opt := range options {
+				optionMap[opt.Name] = opt
+			}
+
+			// This example stores the provided arguments in an []interface{}
+			// which will be used to format the bot's response
+			margs := make([]interface{}, 0, len(options))
+			msgformat := "You learned how to use command options! " +
+				"Take a look at the value(s) you entered:\n"
+
+			// Get the value from the option map.
+			// When the option exists, ok = true
+			if option, ok := optionMap["server-name"]; ok {
+				// Option values must be type asserted from interface{}.
+				// Discordgo provides utility functions to make this simple.
+				// serverName = option.StringValue()
+				margs = append(margs, option.StringValue())
+				msgformat += "> Server Name: %s\n"
+			}
+			if option, ok := optionMap["action"]; ok {
+				// Option values must be type asserted from interface{}.
+				// Discordgo provides utility functions to make this simple.
+				// action = option.StringValue()
+				margs = append(margs, option.StringValue())
+				msgformat += "> Action: %s\n"
+			}
+
+			// serverAdministration(s, i, serverName, action)
+
+			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				// Ignore type for now, they will be discussed in "responses"
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Content: fmt.Sprintf(
+						msgformat,
+						margs...,
+					),
+				},
+			})
+		},
 		"basic-command": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,

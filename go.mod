@@ -2,7 +2,10 @@ module mapbot
 
 go 1.19
 
-require github.com/bwmarrin/discordgo v0.25.1-0.20220801155050-f60fb54c52b6
+require (
+	github.com/bwmarrin/discordgo v0.25.1-0.20220801155050-f60fb54c52b6
+	github.com/joho/godotenv v1.4.0
+)
 
 require (
 	github.com/gorilla/websocket v1.4.2 // indirect

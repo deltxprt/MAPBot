@@ -6,6 +6,8 @@ import (
 	"log"
 	"mapbot/internal/data"
 	"net/http"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 func azFunctionApiCall(apiUrl string) *data.AzApiReponse {
@@ -32,4 +34,16 @@ func azFunctionApiCall(apiUrl string) *data.AzApiReponse {
 		log.Fatal(err)
 	}
 	return &Instances
+}
+
+func serverAdministration(s *discordgo.Session, m *discordgo.MessageCreate, action, serverName string) {
+	switch action {
+	case "start":
+
+	case "stop":
+
+	case "restart":
+
+	case "status":
+	}
 }
