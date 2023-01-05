@@ -1,5 +1,5 @@
-.idea
-.json
-node_modules
-.env
-config.json
+**.idea
+**.json
+**node_modules
+**.env
+**config.json
