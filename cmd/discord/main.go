@@ -49,6 +49,8 @@ func main() {
 	}
 	s.AddHandler(messageHandler)
 
+	go updateStatus(s)
+
 	defer s.Close()
 
 	stop := make(chan os.Signal, 1)
